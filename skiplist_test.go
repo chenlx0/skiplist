@@ -1,6 +1,7 @@
 package skiplist
 
 import (
+	"math/rand"
 	"testing"
 )
 
@@ -70,5 +71,31 @@ func TestAddAndRemove(t *testing.T) {
 
 	if list.Contain(int32(80)) {
 		t.Error("must not contain `80`")
+	}
+}
+
+func BenchmarkSkipList(t *testing.B) {
+	list := New(new(Integer))
+	count := int(2e5)
+	for i := 0; i < count; i++ {
+		num := rand.Int31()
+		list.Add(num)
+	}
+	for i := 0; i < count; i++ {
+		num := rand.Int31()
+		list.Contain(num)
+	}
+}
+
+func BenchmarkMap(t *testing.B) {
+	tmap := make(map[int32]bool, 8)
+	count := int(2e5)
+	for i := 0; i < count; i++ {
+		num := rand.Int31()
+		tmap[num] = true
+	}
+	for i := 0; i < count; i++ {
+		num := rand.Int31()
+		_, _ = tmap[num]
 	}
 }

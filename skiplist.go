@@ -1,10 +1,12 @@
 package skiplist
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 const (
 	// DefaultMaxLevel is default skip list level
-	DefaultMaxLevel = 12
+	DefaultMaxLevel = 18
 )
 
 // Node is a skip list node
