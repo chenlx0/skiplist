@@ -4,7 +4,7 @@ import "math/rand"
 
 const (
 	// DefaultMaxLevel is default skip list level
-	DefaultMaxLevel = 8
+	DefaultMaxLevel = 12
 )
 
 // Node is a skip list node
@@ -66,11 +66,15 @@ func (list *SkipList) getPrevNodes(val interface{}) []*Node {
 	var next *Node
 
 	for i := 0; i < len(prevs); i++ {
-		prevs[i] = list.heads[i]
+		prevs[i] = nil
 	}
 
 	for i := list.maxLevel - 1; i >= 0; i-- {
-		next = prevs[i]
+		if prevs[i] == nil {
+			next = list.heads[i]
+		} else {
+			next = prevs[i]
+		}
 
 		for next != nil && list.compare.Compare(val, next.val) {
 			prevs[i] = next
@@ -107,6 +111,14 @@ func (list *SkipList) Len() int {
 
 // Contain returns if list contains a such value
 func (list *SkipList) Contain(val interface{}) bool {
+	if list.size == 0 {
+		return false
+	}
+
+	if list.compare.Equals(list.heads[0].val, val) {
+		return true
+	}
+
 	prevs := list.getPrevNodes(val)
 
 	if prevs[0] == nil || prevs[0].next[0] == nil {
@@ -136,4 +148,35 @@ func (list *SkipList) Add(val interface{}) {
 	}
 
 	list.size++
+}
+
+// Remove removes all elements equal to the value
+func (list *SkipList) Remove(val interface{}) {
+	prevs := list.getPrevNodes(val)
+	var start *Node
+
+	for i := 0; i < len(prevs); i++ {
+		start = prevs[i]
+		if start == nil || start.next[i] == nil ||
+			!list.compare.Equals(start.next[i].val, val) {
+			continue
+		}
+
+		start = start.next[i]
+		for list.compare.Equals(start.val, val) {
+			start = start.next[i]
+		}
+
+		prevs[i].next[i] = start
+	}
+
+	// remove nodes in head
+	for i := 0; i < len(list.heads); i++ {
+		if list.heads[i] != nil &&
+			list.compare.Equals(list.heads[i].val, val) {
+			list.heads[i] = list.heads[i].next[i]
+		}
+	}
+
+	list.size--
 }
