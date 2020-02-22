@@ -1,6 +1,9 @@
 # SkipList
 
-This is a skip list implementation in Go.
+This is a skip list implementation in Go. (Sorted List)
+
+Go 语言的跳跃表实现（有序集合）
+
 
 
 Example:
