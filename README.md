@@ -4,6 +4,12 @@ This is a skip list implementation in Go. (Sorted List)
 
 Go 语言的跳跃表实现（有序集合）
 
+To start using this library:
+
+```
+go get github.com/chenlx0/skiplist
+```
+
 
 
 Example:
@@ -20,7 +26,7 @@ func (i *Integer) Equals(lhs interface{}, rhs interface{}) bool {
 	return lhs == rhs
 }
 
-list := New(new(Integer))
+list := skiplist.New(new(Integer))
 
 // Add an element
 list.Add(int32(100))
